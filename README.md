@@ -1,4 +1,4 @@
-# Reproducible-In-Place Provenance Object
+# Reproducible-In-Place Provenance Objects (RIPPOs)
 
 This repository provides a template for RIPPOs:  *Reproducible-In-Place Provenance Objects*.
 
