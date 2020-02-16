@@ -14,7 +14,7 @@ To qualify as a RIPPO a repository must meet these requirements:
 
 2. Running the RIPPO should require nothing more than cloning the repository onto the local machine, and issuing a single command from a terminal session in the top-level dirctory of the local repository.
 
-3. The running RIPPO should be transparent to the computer on which it is running. The user of a RIPPO should be able to use the terminal, editors, web browsers, and other software tools installed on their computer to interact with the running RIPPO, to modify the data or code in the RIPPO, and to inspect the code and data employed in the RIPPO.
+3. The contents and operation of a RIPPO should be transparent to the computer on which it is running. The user of a RIPPO should be able to use the terminal, editors, web browsers, and other software tools installed on their computer to interact with the running RIPPO, to modify the data or code in the RIPPO, and to inspect the code and data employed in the RIPPO.
 
 
 
