@@ -10,7 +10,7 @@ A RIPPO is a version-controlled code/data repository that (a) demonstrates the v
 
 To qualify as a RIPPO a repository must meet these requirements:
 
-1. The code in the repo must be runnable on any computer meeting some minimal hardware and software requirements for runnings RIPPOs generally.  It must not be necessary to install any additional software specific to the RIPPO.
+1. The code in the repo must be runnable on any computer meeting some minimal hardware and software requirements for runnings RIPPOs generally.  It must not be necessary to install any additional software specific to the RIPPO. A simple RIPPO might require that GNU Make and Docker be installed.
 
 2. Running the RIPPO should require nothing more than cloning the repository onto the local machine, and issuing a single command from a terminal session in the top-level dirctory of the local repository.
 
