@@ -4,7 +4,7 @@ This repository provides a template for RIPPOs:  *Reproducible-In-Place Provenan
 
 ## What is a RIPPO?
 
-A RIPPO is a version-controlled code/data repository that (a) demonstrates the validity of one or more computational processes and results, (b) provides within it the means to execute the processes to yield those results on one's own computer, (c) makes it easy to check that processes and results match well-defined expectations, (d) does all of this in a transparent manner such that the processes can be confirmed to match the provided description.
+A RIPPO is a version-controlled code/data repository that (a) demonstrates the validity of one or more computational processes and associated results, (b) provides within it the means to execute the processes to yield those results on one's own computer, (c) makes it easy to check that these processes and results match well-defined expectations, (d) does all of this in a transparent manner such that the computations performed can be confirmed to match the provided description.
 
 ## General requirements for RIPPOs:
 
