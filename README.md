@@ -27,7 +27,7 @@ This repository provides a template for simple RIPPOs that require only that `Gi
 
 * A `Makefile` in the top-level directory of the repo that provides targets for building and running the Docker image, and for carrying out predefined operations on the contents of the repository.
 
-A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPPO docker container must *mount the repository cloned on the user's computer at a predefined location within the running container*.
+A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPPO docker container must mount the repository cloned on the user's computer at a predefined location within the running container, and must perform all of its work within the directory tree under this mount point.
 
 The RIPPO convention is that the clone of the `<reponame>` repository on the user's computer is mounted under the `/mnt/<reponame>` directory within the container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and after the container is stopped.
 
