@@ -1,6 +1,6 @@
 # Reproducible-In-Place Provenance Objects (RIPPOs)
 
-This repository provides a template for RIPPOs:  *Reproducible-In-Place Provenance Objects*.
+This repository provides a description and template for RIPPOs: *Reproducible-In-Place Provenance Objects*.
 
 ## What is a RIPPO?
 
@@ -17,7 +17,7 @@ To qualify as a RIPPO a repository must meet these requirements:
 3. The contents and operation of a RIPPO should be transparent with respect to the computer on which it is running. The user of a RIPPO should be able to use the terminal, editors, web browsers, and other software tools already installed on their computer to interact with the running RIPPO, to modify the data or code in the RIPPO, and to inspect the code and data employed in the RIPPO.
 
 
-## Git-Docker-Make RIPPOs
+## *Git-Docker-Make* RIPPOs
 
 This repository provides a template for simple RIPPOs that require only that `Git`, `Docker`, and `GNU Make` be installed on a user's machine.  The essential components of a *Make-Docker RIPPO* are:
 
@@ -27,7 +27,7 @@ This repository provides a template for simple RIPPOs that require only that `Gi
 
 * A `Makefile` in the top-level directory of the repo that provides targets for building and running the Docker image, and for carrying out predefined operations on the contents of the repository.
 
-A key property of a *Git-Docker-Make* repo is that `Make` targets that start the RIPPO docker container *mount the clone of the repository on the user's computer in a predefined location within the running container*.
+A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPPO docker container must *mount the repository cloned on the user's computer at a predefined location within the running container*.
 
 The RIPPO convention is that the clone of the `<reponame>` repository on the user's computer is mounted under the `/mnt/<reponame>` directory within the container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and after the container is stopped.
 
