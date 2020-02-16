@@ -30,7 +30,9 @@ This repository provides a template for simple RIPPOs that require only that `Gi
 
 A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPPO docker container must mount the repository cloned on the user's computer at a predefined location within the running container, and must perform all of its work within the directory tree under this mount point.
 
-The RIPPO convention is that the clone of the `<reponame>` repository on the user's computer is mounted under the `/mnt/<reponame>` directory within the container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and after the container is stopped.
+The RIPPO convention is that the clone of the repository `<reponame>` on the user's computer is mounted under the `/mnt/<reponame>` directory within the running container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and after the container is stopped.  When the RIPPO is started the working directory is set automatically to `/mnt/<reponame>` so that the user's working directory appears unchanged.
+
+
 
 
 
