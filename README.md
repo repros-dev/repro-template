@@ -1,36 +1,36 @@
-# Reproducible-In-Place Provenance Objects (RIPPOs)
+# Reproducible-In-Place Research Objects (RIPROs)
 
-This repository provides a description and template for RIPPOs: *Reproducible-In-Place Provenance Objects*.
+This repository provides a description and template for RIPROs: *Reproducible-In-Place Research Objects*.
 
-## What is a RIPPO?
+## What is a RIPRO?
 
-A RIPPO is a version-controlled code/data repository that (a) demonstrates the validity of one or more computational processes and associated results; (b) provides within it the means to execute the processes to yield those results on one's own computer; (c) makes it easy to check that these processes and results match well-defined expectations; (d) does all of this in a transparent manner such that the computations performed can be confirmed to match the provided description.
+A RIPRO is a version-controlled code/data repository that (a) demonstrates the validity of one or more computational processes and associated results; (b) provides within it the means to execute the processes to yield those results on one's own computer; (c) makes it easy to check that these processes and results match well-defined expectations; (d) does all of this in a transparent manner such that the computations performed can be confirmed to match the provided description.
 
-## General requirements for RIPPOs
+## General requirements for RIPROs
 
-To qualify as a RIPPO a repository must meet these requirements:
+To qualify as a RIPRO a repository must meet these requirements:
 
-1. The code in the repo must be runnable on any computer meeting some minimal hardware and software requirements for running RIPPOs generally. A RIPPO must not require that a particular operating system be used, no must it require installing additional software specific to the RIPPO. Simple RIPPOs that use this repo as a template require only that `Git`, `Docker`, and `GNU Make` be installed on the user's computer and will run on Linux, macOS, and Windows-based systems, among others.
+1. The code in the RIPRO must be runnable on any computer meeting some minimal hardware and software requirements for running RIPROs generally. A RIPRO must not require that a particular operating system be used, nor may it require installing additional software specific to the RIPRO. Simple RIPROs that use this repo as a template require only that `Git`, `Docker`, and `GNU Make` be installed on the user's computer and will run on Linux, macOS, and Windows-based systems, among others.
 
-2. Running the RIPPO should require nothing more than cloning the repository onto the local machine, and issuing a single command from a terminal session in the top-level directory of the cloned repository.
+2. Running the RIPRO should require nothing more than cloning the repository onto the local machine, and issuing a single command from a terminal session in the top-level directory of the cloned repository.
 
-3. The contents and operation of a RIPPO should be transparent with respect to the computer on which it is running. The user of a RIPPO should be able to use the terminal, editors, web browsers, and other software tools already installed on the computer to interact with the running RIPPO, to modify the data or code in the RIPPO, and to inspect the code and data employed in the RIPPO.
+3. The contents and operation of a RIPRO should be transparent with respect to the computer on which it is running. The user of a RIPRO should be able to use the terminal, editors, web browsers, and other software tools already installed on the computer to interact with the running RIPRO, to modify the data or code in the RIPRO, and to inspect the code and data employed in the RIPRO.
 
-## *Git-Docker-Make* RIPPOs
+## *Git-Docker-Make* RIPROs
 
-This repository provides a template for simple RIPPOs that require only that `Git`, `Docker`, and `GNU Make` be installed on a user's machine.  The essential components of a *Make-Docker RIPPO* are:
+This repository provides a template for simple RIPROs that require only that `Git`, `Docker`, and `GNU Make` be installed on a user's machine.  The essential components of a *Make-Docker RIPRO* are:
 
-* A `Git` repository that provides any essential components of the RIPPO including code and data.
+* A `Git` repository that provides any essential components of the RIPRO including code and data.
 
-* A `Dockerfile` in the top-level directory of the repo that defines the computing environment required to run the code in the RIPPO.
+* A `Dockerfile` in the top-level directory of the RIPRO that defines the computing environment required to execute the analysis represented by the RIPRO.
 
-* A `Makefile` in the top-level directory of the repo that provides targets for building and starting the RIPPO, for running the computations represented by the RIPPO, and for comparing the results of those computations against the expected results.
+* A `Makefile` in the top-level directory of the RIPRO that provides targets for building and starting the RIPRO, for running the computations represented by the RIPRO, and for comparing the results of those computations against the expected results.
 
-## What makes a RIPPO more than a Git repo and Docker image?
+## What makes a RIPRO more than a Git repo and Docker image?
 
-A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPPO docker container must mount the repository cloned on the user's computer at a predefined location within the running container, and must perform all of its work within the directory tree under this mount point.
+A key property of a *Git-Docker-Make* repo is that any `Make` target that starts the RIPRO docker container must mount the repository cloned on the user's computer at a predefined location within the running container, and must perform all of its work within the directory tree under this mount point.
 
-The RIPPO convention is that the clone of the repository `<reponame>` on the user's computer is mounted under the `/mnt/<reponame>` directory within the running container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and when the container is stopped.  When the RIPPO is started the working directory is set automatically to `/mnt/<reponame>` so that the user's working directory appears unchanged.
+The RIPRO convention is that the clone of the Git repository `<riproname>` on the user's computer is mounted under the `/mnt/<riproname>` directory within the running container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and when the container is stopped.  Whenever the RIPRO is started the working directory is set automatically to `/mnt/<reponame>` so that the user's working directory appears unchanged.
 
 
 
