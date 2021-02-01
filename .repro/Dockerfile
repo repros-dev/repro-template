@@ -30,7 +30,6 @@ ENV BASHRC ${HOME}/.bashrc
 USER  ${REPRO_USER}
 WORKDIR $HOME
 
-RUN echo 'PATH=~/go/bin:/usr/local/go/bin:$PATH' >> ${BASHRC}
 RUN echo "export IN_RUNNING_REPRO=${REPRO_NAME}" >> ${BASHRC}
 RUN echo "cd ${REPRO_MNT}" >> ${BASHRC}
 

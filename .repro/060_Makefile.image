@@ -8,7 +8,7 @@ start-image:            ## Start a new container using the Docker image.
 	$(REPRO_RUN_COMMAND)
 
 build-image:            ## Build the Docker image used to run this REPRO.
-	docker build -t ${REPRO_IMAGE} .
+	docker build -f .repro/Dockerfile -t ${REPRO_IMAGE} .
 
 pull-image:             ## Pull the Docker image from Docker Hub.
 	docker pull ${REPRO_IMAGE}

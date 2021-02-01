@@ -22,7 +22,7 @@ This repository provides a template for simple REPROs that require only that `Gi
 
 * A `Git` repository that provides any essential components of the REPRO including code and data.
 
-* A `Dockerfile` in the top-level directory of the REPRO that defines the computing environment required to execute the analysis represented by the REPRO.
+* A `Dockerfile` in the `.repro` subdirectory of the REPRO that defines the computing environment required to execute the analysis represented by the REPRO.
 
 * A `Makefile` in the top-level directory of the REPRO that provides targets for building and starting the REPRO, for running the computations represented by the REPRO, and for comparing the results of those computations against the expected results.
 
@@ -30,7 +30,7 @@ This repository provides a template for simple REPROs that require only that `Gi
 
 A key property of a *Git-Docker-Make* REPRO is that any `Make` target that starts the REPRO docker container must mount the repository cloned on the user's computer at a predefined location within the running container, and must perform all of its work within the directory tree under this mount point.
 
-The REPRO convention is that the clone of the Git repository `<repro_name>` on the user's computer is mounted under the `/mnt/<repro_name>` directory within the running container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and when the container is stopped.  Whenever a terminal sessio is started in the REPRO the working directory is set automatically to `/mnt/<repro_name>` so that the user's working directory appears unchanged.
+The REPRO convention is that the clone of the Git repository `<repro_name>` on the user's computer is mounted under the `/mnt/<repro_name>` directory within the running container.  All products of computations performed in the container are stored under this mount point and so can be accessed from outside the container both while the container is running, and when the container is stopped.  Whenever a terminal session is started in the running REPRO the working directory is set automatically to `/mnt/<repro_name>` so that the user's working directory appears unchanged.
 
 
 

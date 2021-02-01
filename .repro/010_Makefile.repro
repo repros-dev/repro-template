@@ -1,0 +1,33 @@
+
+# identify the REPRO and associated Docker image
+REPRO_NAME=repro-template
+REPRO_DOCKER_ORG=cirss
+REPRO_IMAGE_TAG=latest
+REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
+
+# provide runtime options for Docker when running this REPRO
+REPRO_DOCKER_OPTIONS=
+
+# define mount point for REPRO directory tree in running container
+REPRO_DIR=/mnt/${REPRO_NAME}
+
+# identify important REPRO subdirectories
+REPRO_EXAMPLES_DIR=examples
+REPRO_CODE_DIR=src
+
+# define command for running the REPRO Docker image
+REPRO_RUN_COMMAND=docker run -it --rm $(REPRO_DOCKER_OPTIONS)               \
+                             --volume $(CURDIR):$(REPRO_DIR)                \
+                             $(REPRO_IMAGE)
+
+# detect if in a running REPRO container
+ifdef IN_RUNNING_REPRO
+RUN_IN_REPRO=bash -ic
+else
+RUN_IN_REPRO=$(REPRO_RUN_COMMAND) bash -ic
+endif
+
+# detect if running in a Windows environment
+ifeq ('$(OS)', 'Windows_NT')
+PWSH=powershell -noprofile -command
+endif
