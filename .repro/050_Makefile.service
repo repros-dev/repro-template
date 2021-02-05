@@ -1,13 +1,7 @@
-## 
+##
 ## # Targets for running the service provided by this REPRO locally
-## 
+##
 
 start-service:          ## Run the service provided by this REPRO locally
-ifdef IN_RUNNING_REPRO
-	@echo "\n--------------------------------------------------------------------------"
-	@echo "The local service will now start. Connect to it by navigating in your"
-	@echo "web browser to http://localhost:80. Exit the service with CTRL-C"
-	@echo "--------------------------------------------------------------------------\n"
-else
-	@$(RUN_IN_REPRO) 'make start-service; bash -il'
-endif
+	$(RUN_IN_REPRO) $(REPRO_SERVICE_COMMAND)
+
