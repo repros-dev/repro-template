@@ -1,0 +1,7 @@
+## 
+## # Targets for managing the data in this REPRO.
+## 
+
+get-data:                ## Run all of the examples.
+
+clean-data:              ## Delete all downloaded and generated data.

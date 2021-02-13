@@ -4,7 +4,7 @@
 
 ifndef IN_RUNNING_REPRO
 
-start-image:            ## Start a new container using the Docker image.
+start-image:            ## Start the REPRO using the Docker image.
 	$(REPRO_RUN_COMMAND)
 
 build-image:            ## Build the Docker image used to run this REPRO.

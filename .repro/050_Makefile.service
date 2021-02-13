@@ -1,7 +1,0 @@
-##
-## # Targets for running the service provided by this REPRO locally
-##
-
-start-service:          ## Run the service provided by this REPRO locally
-	$(RUN_IN_REPRO) $(REPRO_SERVICE_COMMAND)
-

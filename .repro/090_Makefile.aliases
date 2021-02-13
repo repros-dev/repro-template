@@ -1,0 +1,14 @@
+## 
+## # Aliases for targets in this Makefile.
+## 
+
+# Define target aliases available both inside and outside a running REPRO
+examples: run-examples  ## Run all of the examples.
+
+# Define target aliases available only outside a running REPRO
+ifndef IN_RUNNING_REPRO
+image:    build-image   ## Build the Docker image used to run this REPRO.
+start:    start-image   ## Start the REPRO using the Docker image.
+endif
+
+## 
