@@ -21,7 +21,7 @@ REPRO_SERVICE_COMMAND=${REPRO_SERVICE_DIR}/run.sh
 
 # define command for running the REPRO Docker image
 REPRO_RUN_COMMAND=docker run -it --rm $(REPRO_DOCKER_OPTIONS)               \
-                             --volume $(CURDIR):$(REPRO_DIR)                \
+                             --volume "$(CURDIR)":"$(REPRO_DIR)"            \
                              $(REPRO_IMAGE)
 
 # detect if in a running REPRO container
