@@ -9,7 +9,7 @@ cd ${REPRO_BUILDER_DIR}/cache
 apt-get -y update
 apt-get -y install wget
 
-repro_template_release=https://github.com/CIRSS/repro-template/releases/download/v0.1.0/
+repro_template_release=https://github.com/CIRSS/repro-builder/releases/download/v0.1.0/
 wget --quiet ${repro_template_release}/module.txt
 
 readarray lines < module.txt
