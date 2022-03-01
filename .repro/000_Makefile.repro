@@ -9,7 +9,7 @@ REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
 REPRO_DOCKER_OPTIONS=
 
 # define mount point for REPRO directory tree in running container
-REPRO_DIR=/mnt/${REPRO_NAME}
+REPRO_MNT=/mnt/${REPRO_NAME}
 
 # identify important REPRO subdirectories
 REPRO_CODE_DIR=src
@@ -21,7 +21,9 @@ REPRO_SERVICE_COMMAND=${REPRO_SERVICE_DIR}/run.sh
 
 # define command for running the REPRO Docker image
 REPRO_RUN_COMMAND=docker run -it --rm $(REPRO_DOCKER_OPTIONS)               \
-                             --volume "$(CURDIR)":"$(REPRO_DIR)"            \
+                             -e REPRO_NAME="${REPRO_NAME}"                  \
+                             -e REPRO_MNT="${REPRO_MNT}"                    \
+                             --volume "$(CURDIR)":"$(REPRO_MNT)"            \
                              $(REPRO_IMAGE)
 
 # detect if in a running REPRO container
