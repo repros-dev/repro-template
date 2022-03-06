@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM cirss/repro-base:latest
 
 COPY .repro .repro
 ADD https://github.com/CIRSS/repro-builder/releases/download/v0.1.0/build .repro/
