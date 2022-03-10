@@ -1,8 +1,9 @@
 FROM cirss/repro-base:latest
 
 COPY .repro .repro
-ADD https://github.com/CIRSS/repro-builder/releases/download/v0.1.0/build .repro/
-RUN bash .repro/build
+ENV BUILDERS_RELEASE https://raw.githubusercontent.com/repros-dev/repro-builders/master/.repro/exported
+ADD ${BUILDERS_RELEASE}/bootstrap .repro/
+RUN bash .repro/bootstrap ${BUILDERS_RELEASE}
 
 USER repro
 
