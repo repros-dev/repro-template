@@ -1,6 +1,6 @@
 
 # identify the REPRO and associated Docker image
-REPRO_NAME=repros-template
+REPRO_NAME=repro-template
 REPRO_DOCKER_ORG=cirss
 REPRO_IMAGE_TAG=latest
 REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
