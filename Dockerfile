@@ -12,4 +12,6 @@ RUN bash .repro/bootstrap ${REPRO_BUILDER_RELEASE}
 
 USER repro
 
+RUN repro.require repro-builder master ${REPROS_DEV_BRANCH}
+
 CMD  /bin/bash -il
