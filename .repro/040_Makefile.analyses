@@ -1,7 +1,0 @@
-## 
-## # Targets for performing the analyses in this REPRO.
-## 
-
-create-analyses:         ## Run all of the examples.
-
-clean-analyses:          ## Delete all reports.
