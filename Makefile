@@ -68,12 +68,12 @@ endif
 ## 
 ## # Targets for running the examples in this REPRO.
 
-## run-examples:           Run all of the examples.
-run-examples: 
-	$(RUN_IN_REPRO) 'repro.run_target run-demos'
+## run-demo:           Run the demo.
+run-demo: 
+	$(RUN_IN_REPRO) 'repro.run_target run-demo'
 
-clean-examples:         ## Delete all products of examples.
-	$(RUN_IN_REPRO) 'repro.run_target clean-demos'
+clean-demo:         ## Delete all products the demo.
+	$(RUN_IN_REPRO) 'repro.run_target clean-demo'
 
 
 # include .repro/030_Makefile.reports
