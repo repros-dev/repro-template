@@ -1,4 +1,0 @@
-
-run:
-	bash run.sh
-
