@@ -6,6 +6,7 @@ default_target: help
 
 include repro-config
 repro-config:
+	$(error The repro-config file is required to set the REPRO_NAME and other REPRO properties)
 
 # identify the REPRO and associated Docker image
 REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
