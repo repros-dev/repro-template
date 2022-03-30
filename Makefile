@@ -182,8 +182,11 @@ endif
 
 ifndef IN_RUNNING_REPRO
 
-base-image:             ## Build the Docker base image.
-	docker build -f Dockerfile-base -t ${REPRO_DOCKER_ORG}/repro-base:${REPRO_IMAGE_TAG} .
+build-base-image:       ## Build the Docker base image.
+	docker build -f Dockerfile-base -t ${BASE_IMAGE} .
+
+push-base-image:        ## Push the base image to Docker Hub.
+	docker push ${BASE_IMAGE}
 
 endif
 
