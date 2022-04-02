@@ -174,19 +174,17 @@ push-image:             ## Push the Docker image to Docker Hub.
 
 endif
 
-
-#include .repro/085_Makefile.base
 ## 
-## # Targets for building the base image.
+## # Targets for building a custom parent image.
 ## 
 
 ifndef IN_RUNNING_REPRO
 
-build-base-image:       ## Build the Docker base image.
-	docker build -f Dockerfile-base -t ${BASE_IMAGE} .
+build-parent-image:       ## Build a custom parent Docker image.
+	docker build -f Dockerfile-parent -t ${PARENT_IMAGE} .
 
-push-base-image:        ## Push the base image to Docker Hub.
-	docker push ${BASE_IMAGE}
+push-parent-image:        ## Push the custom parent image to Docker Hub.
+	docker push ${PARENT_IMAGE}
 
 endif
 

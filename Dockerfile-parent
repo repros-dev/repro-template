@@ -1,0 +1,10 @@
+# FROM cirss/repro-parent:latest
+
+# ADD ${REPROS_DEV_REPRO}/setup-boot /repro/release/
+# RUN bash /repro/release/setup-boot ${REPROS_DEV_REPRO}
+
+# USER repro
+
+# RUN repro.require repro master ${REPROS_DEV}
+
+# CMD  /bin/bash -i
