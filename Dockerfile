@@ -7,6 +7,4 @@ RUN bash /repro/dist/setup
 
 USER repro
 
-RUN repro.require repro master ${REPROS_DEV}
-
 CMD  /bin/bash -il
