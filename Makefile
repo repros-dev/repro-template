@@ -111,7 +111,7 @@ endif # ifndef IN_RUNNING_REPRO
 
 # include REPRO run-time configuration file if present 
 include repro-run-config
-repro-build-config:
+repro-run-config:
 
 # define mount point for REPRO directory tree in running container
 REPRO_MNT=/mnt/${REPRO_NAME}
