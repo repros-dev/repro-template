@@ -1,36 +1,120 @@
 # This is the top-level Makefile for this REPRO.
-# Type 'make help' to list the available targets.
+# Type 'make' with no arguments to list the available targets.
 
-# set the default Make target
-default_target: help
+# invoke the `list` target run if no argument is provided to make
+default_target: list
 
-include repro-config
-repro-config:
-	$(error The repro-config file is required to set the REPRO_NAME and other REPRO properties)
+# detect if running in a Windows environment
+ifeq ('$(OS)', 'Windows_NT')
+PWSH=powershell -noprofile -command
+endif
 
-# identify the REPRO and associated Docker image
+## 
+#- =============================================================================
+##     --- Targets for understanding and maintaining this Makefile ---
+#- =============================================================================
+## 
+
+list:                   ## List Makefile targets (default target).
+ifdef PWSH
+	@${PWSH} "Get-ChildItem .repro | Select-String -Pattern '#\# ' | % {$$_.Line.replace('##','')}"
+else
+	@sed -ne '/@sed/!s/#[#] //p' $(MAKEFILE_LIST)
+endif
+
+help:                   ## Show detailed Makefile help.
+ifdef PWSH
+	@${PWSH} "Get-ChildItem .repro | Select-String -Pattern '#\# ' | % {$$_.Line.replace('##','')}"
+else
+	@sed -ne '/@sed/!s/#[#-] //p' $(MAKEFILE_LIST)
+endif
+
+## 
+upgrade-makefile:       ## Replace local REPRO Makefile with latest version 
+                        ## of Makefile on repros-dev/repro master branch.
+	curl -L https://raw.githubusercontent.com/repros-dev/repro/master/Makefile -o Makefile
+
+# Configure REPRO image builds, loading settings from repro-build-config file
+# if present, and providing appropriate defaults for undefined settings. 
+
+# include REPRO image configuration file if present 
+include repro-image-config
+repro-image-config:
+
+# use working directory as name of REPRO if REPRO_NAME undefined
+ifndef REPRO_NAME
+REPRO_NAME=$(shell basename $$(pwd))
+endif
+
+# use name of user for Docker organization if REPRO_DOCKER_ORG undefined
+ifndef REPRO_DOCKER_ORG
+REPRO_DOCKER_ORG=$(shell whoami)
+endif
+
+# use 'latest' as image tag if  REPRO_IMAGE_TAG undefined
+ifndef REPRO_IMAGE_TAG
+REPRO_IMAGE_TAG=latest
+endif
+
+# identify the Docker image associated with this REPRO
 REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
 
-# provide runtime options for Docker when running this REPRO
-REPRO_DOCKER_OPTIONS=
-#REPRO_DOCKER_OPTIONS=-p 9999:9999
+ifndef IN_RUNNING_REPRO
 
-#REPRO_MOUNT_CLI=--volume $(CURDIR)/../go-cli:/mnt/go-cli
-#REPRO_MOUNT_BLAZE=--volume $(CURDIR)/../blaze:/mnt/blaze
+## 
 
-REPRO_MOUNT_OTHER_VOLUMES=
-#REPRO_MOUNT_OTHER_VOLUMES=$(REPRO_MOUNT_CLI) $(REPRO_MOUNT_BLAZE)
+#- =============================================================================
+##     --- Targets affected by settings in file repro-image-config ---
+#- =============================================================================
+
+## 
+#- ---------- Targets for managing the Docker image for this REPRO -------------
+#- 
+build-image:            ## Build this REPRO's Docker image.
+	docker build -t ${REPRO_IMAGE} .
+
+rebuild-image:          ## Force rebuild of this REPRO's Docker image.
+	docker build --no-cache -t ${REPRO_IMAGE} .
+
+pull-image:             ## Pull this REPRO's Docker image from Docker Hub.
+	docker pull ${REPRO_IMAGE}
+
+push-image:             ## Push this REPRO's Docker image to Docker Hub.
+	docker push ${REPRO_IMAGE}
+
+#-  
+#- ---------- Targets for building a custom parent image  ----------------------
+#- 
+ifdef PARENT_IMAGE
+
+build-parent-image:     #- Build the custom parent Docker image.
+	docker build -f Dockerfile-parent -t ${PARENT_IMAGE} .
+
+rebuild-parent-image:   #- Force rebuild of the custom Docker image.
+	docker build --no-cache -f Dockerfile-parent -t ${PARENT_IMAGE} .
+
+pull-parent-image:      #- Pull the custom parent image from Docker Hub.
+	docker pull ${PARENT_IMAGE}
+
+push-parent-image:      #- Push the custom parent image to Docker Hub.
+	docker push ${PARENT_IMAGE}
+
+endif # ifdef PARENT_IMAGE
+
+endif # ifndef IN_RUNNING_REPRO
+
+
+## 
+#- =============================================================================
+##    --- Targets also affected by settings in file repro-run-config ---
+#- =============================================================================
+
+# include REPRO run-time configuration file if present 
+include repro-run-config
+repro-build-config:
 
 # define mount point for REPRO directory tree in running container
 REPRO_MNT=/mnt/${REPRO_NAME}
-
-# identify important REPRO subdirectories
-#REPRO_CODE_DIR=src
-REPRO_EXAMPLES_DIR=examples
-REPRO_SERVICE_DIR=service
-
-# define command for running the service provided by this REPRO
-REPRO_SERVICE_COMMAND=${REPRO_SERVICE_DIR}/run.sh
 
 # define command for running the REPRO Docker image
 REPRO_RUN_COMMAND=docker run -it --rm $(REPRO_DOCKER_OPTIONS)               \
@@ -40,83 +124,25 @@ REPRO_RUN_COMMAND=docker run -it --rm $(REPRO_DOCKER_OPTIONS)               \
                              $(REPRO_MOUNT_OTHER_VOLUMES)                   \
                              $(REPRO_IMAGE)
 
-# detect if in a running REPRO container
+# define command for running a command in a running or currently-idle REPRO
 ifdef IN_RUNNING_REPRO
 RUN_IN_REPRO=bash -ic
 else
 RUN_IN_REPRO=$(REPRO_RUN_COMMAND) bash -ilc
 endif
 
-# detect if running in a Windows environment
-ifeq ('$(OS)', 'Windows_NT')
-PWSH=powershell -noprofile -command
-endif
 
-
-#include .repro/010_Makefile.help
 ## 
-## # Targets for learning about this REPRO and Makefile
-## 
-
-help:                   ## Show this help.
-ifdef PWSH
-	@${PWSH} "Get-ChildItem .repro | Select-String -Pattern '#\# ' | % {$$_.Line.replace('##','')}"
-else
-	@sed -ne '/@sed/!s/#\# //p' $(MAKEFILE_LIST)
-endif
-
-#include .repro/020_Makefile.examples
-## 
-## # Targets for running the examples in this REPRO.
-
-## run-demo:           Run the demo.
-run-demo: 
-	$(RUN_IN_REPRO) 'repro.run_target run-demo'
-
-clean-demo:         ## Delete all products the demo.
-	$(RUN_IN_REPRO) 'repro.run_target clean-demo'
-
-
-# include .repro/030_Makefile.reports
-## 
-## # Targets for creating the reports in this REPRO.
-## 
-
-create-reports:          ## Run all of the examples.
-
-clean-reports:           ## Delete all reports.
-
-
-# include .repro/040_Makefile.analyses
-## 
-## # Targets for performing the analyses in this REPRO.
-## 
-
-create-analyses:         ## Run all of the examples.
-
-clean-analyses:          ## Delete all reports.
-
-
-#include .repro/040_Makefile.data
-clean-database:       ## Delete the database logs.
-	$(RUN_IN_REPRO) 'repro.run_target clean-database'
-	
-drop-database:        ## Delete the database storage files.
-	$(RUN_IN_REPRO) 'repro.run_target drop-database'
-
-purge-database:       ## Delete all artifacts associated with the database instance.
-	$(RUN_IN_REPRO) 'repro.run_target purge-database'
-
-
-#include .repro/050_Makefile.service
-## 
-## # Targets for running the service provided by this REPRO locally
+#- ---------- Targets for starting this REPRO  ---------------------------------
+#- 
+start-repro:            ## Start this REPRO in interactive mode. 
+	$(REPRO_RUN_COMMAND)
 
 # Define target aliases available only outside a running REPRO
 ifndef IN_RUNNING_REPRO
 
-start-service:          ## Run the service provided by this REPRO locally
-	$(RUN_IN_REPRO)  'make -C ${REPRO_SERVICE_DIR} run'
+start-service:          ## Run the services provided by this REPRO.
+	$(RUN_IN_REPRO) 'repro.run_target run-service'
 	
 else
 
@@ -127,20 +153,61 @@ start-service:
 
 endif
 
-#include .repro/070_Makefile.code
-##
-## # Targets for building and testing custom code in this REPRO.
+## 
+#- ---------- Targets for running the examples in this REPRO --------------------
+#- 
+## run-demo:               Run this REPRO's demo.
+run-demo: 
+	$(RUN_IN_REPRO) 'repro.run_target run-demo'
 
-clean-code:             ## Delete artifacts from previous builds.
-	$(RUN_IN_REPRO) 'repro.run_target clean-code'
+clean-demo:             ## Delete all artifacts created by the demo.
+	$(RUN_IN_REPRO) 'repro.run_target clean-demo'
 
-purge-code:             ## Delete all downloaded, cached, and built artifacts.
-	$(RUN_IN_REPRO) 'repro.run_target purge-code'
+## 
+#- ---------- Targets for performing the analyses in this REPRO -----------------
+#- 
+run-analyses:           ## Run the analyses in this REPRO.
+	$(RUN_IN_REPRO) 'repro.run_target run-analyses'
 
-build-code:             ## Build custom code.
+clean-analyses:         ## Delete all artificats created by the analyses.
+	$(RUN_IN_REPRO) 'repro.run_target clean-analyses'
+
+## 
+#- ---------- Targets for creating the reports in this REPRO -------------------
+#- 
+build-reports:          ## Generate this REPRO's reports.
+	$(RUN_IN_REPRO) 'repro.run_target build-reports'
+
+clean-reports:          ## Delete all generated reports.
+	$(RUN_IN_REPRO) 'repro.run_target clean-reports'
+
+## 
+#- ---------- Targets for maintaining the databases in this REPRO --------------
+#- 
+clean-database:         ## Delete the database logs.
+	$(RUN_IN_REPRO) 'repro.run_target clean-database'
+	
+drop-database:          ## Delete the database storage files.
+	$(RUN_IN_REPRO) 'repro.run_target drop-database'
+
+	$(RUN_IN_REPRO) 'repro.run_target purge-database'
+
+## 
+#- =============================================================================
+##    --- Targets further affected by settings in file repro-code-config ---
+#- =============================================================================
+
+# include REPRO run-time configuration file if present 
+include repro-code-config
+repro-code-config:
+
+## 
+#- ---------- Targets for building and testing custom code in this REPRO -------
+#- 
+build-code:             ## Build the custom code in this REPRO.
 	$(RUN_IN_REPRO) 'repro.run_target build-code'
 
-test-code:              ## Run tests on custom code.
+test-code:              ## Run tests on custom code in this REPRO.
 	$(RUN_IN_REPRO) 'repro.run_target test-code'
 
 install-code:           ## Install built artifacts in REPRO.
@@ -149,58 +216,18 @@ install-code:           ## Install built artifacts in REPRO.
 package-code:           # Package custom artifacts for distribution.
 	$(RUN_IN_REPRO) 'repro.run_target package-code'
 
+clean-code:             ## Delete artifacts generated by builds of the code.
+	$(RUN_IN_REPRO) 'repro.run_target clean-code'
 
-#include .repro/080_Makefile.image
-## 
-## # Targets for managing the Docker image for this REPRO.
-## 
-
-ifndef IN_RUNNING_REPRO
-
-start-image:            ## Start the REPRO using the Docker image.
-	$(REPRO_RUN_COMMAND)
-
-build-image:            ## Build the Docker image used to run this REPRO.
-	docker build -t ${REPRO_IMAGE} .
-
-rebuild-image:          ## Force rebuild of the Docker image used to run this REPRO.
-	docker build --no-cache -t ${REPRO_IMAGE} .
-
-pull-image:             ## Pull the Docker image from Docker Hub.
-	docker pull ${REPRO_IMAGE}
-
-push-image:             ## Push the Docker image to Docker Hub.
-	docker push ${REPRO_IMAGE}
-
-endif
+purge-code:             ## Delete all downloaded, cached, and built artifacts.
+	$(RUN_IN_REPRO) 'repro.run_target purge-code'
 
 ## 
-## # Targets for building a custom parent image.
+#- =============================================================================
+##    --- Target aliases ---
+#- =============================================================================
 ## 
-
-ifndef IN_RUNNING_REPRO
-
-build-parent-image:       ## Build a custom parent Docker image.
-	docker build -f Dockerfile-parent -t ${PARENT_IMAGE} .
-
-push-parent-image:        ## Push the custom parent image to Docker Hub.
-	docker push ${PARENT_IMAGE}
-
-endif
-
-#include .repro/090_Makefile.aliases
-## 
-## # Aliases for targets in this Makefile.
-## 
-
-# Define target aliases available both inside and outside a running REPRO
-
-# Define target aliases available only outside a running REPRO
-ifndef IN_RUNNING_REPRO
-image:    build-image   ## Build the Docker image used to run this REPRO.
-start:    start-image   ## Start the REPRO using the Docker image.
-endif
+image:                  build-image   ## 
+start:                  start-repro   ## 
 
 ## 
-reset-makefile:         ## Replace local Makefile with latest version from repo
-	curl -L https://raw.githubusercontent.com/repros-dev/repro-template/master/Makefile -o Makefile
