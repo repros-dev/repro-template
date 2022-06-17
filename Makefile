@@ -141,9 +141,9 @@ start-repro:            ## Start this REPRO in interactive mode.
 # Define target aliases available only outside a running REPRO
 ifndef IN_RUNNING_REPRO
 
-start-service:          ## Run the services provided by this REPRO.
-	$(RUN_IN_REPRO) 'repro.run_target run-service'
-	
+start-service:          ## Start the services provided by this REPRO.
+	$(RUN_IN_REPRO) 'repro.run_target start-service'
+
 else
 
 start-service:
@@ -190,6 +190,7 @@ clean-database:         ## Delete the database logs.
 drop-database:          ## Delete the database storage files.
 	$(RUN_IN_REPRO) 'repro.run_target drop-database'
 
+purge-database:         ## Delete all artifacts associated with database instance.
 	$(RUN_IN_REPRO) 'repro.run_target purge-database'
 
 ## 
