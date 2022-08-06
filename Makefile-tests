@@ -1,0 +1,74 @@
+
+# run all tests by default
+default_target: all
+
+# default settings for all tests
+export REPRO_EXIT_AFTER_STARTUP=true
+export REPRO_INTERACTIVE_SESSION=false
+export REPRO_LOGGING_LEVEL=debug
+export REPRO_LOGGING_OPTIONS=NO_TIMESTAMPS NO_LOCATIONS NO_TERMINAL
+
+# macro for automatically naming the log file for a test
+REPRO_LOGGING_DIRNAME = .repro-logs
+REPRO_LOGGING_FILENAME = test_$(basename $@).log
+TEXTFILE = $(REPRO_LOGGING_DIRNAME)/test_$(basename $@).txt
+
+# macros for setting destination of logs
+LOG   = REPRO_LOGGING_FILENAME=$(REPRO_LOGGING_FILENAME)
+NOLOG = REPRO_LOGGING_LEVEL=none
+
+# macros for setting the logging level during a test
+ALERT = REPRO_LOGGING_LEVEL=alert
+WARN  = REPRO_LOGGING_LEVEL=warn
+INFO  = REPRO_LOGGING_LEVEL=info
+DEBUG = REPRO_LOGGING_LEVEL=debug
+TRACE = REPRO_LOGGING_LEVEL=trace
+
+# macros for controlling when services start
+AUTO   = REPRO_SERVICES_STARTUP=auto
+MANUAL = REPRO_SERVICES_STARTUP=manual
+
+# names of all tests to be run automatically
+TESTS = reset-repro				\
+		start-repro-auto 		\
+		start-repro-manual		\
+		start-services-auto		\
+		start-services-manual 	\
+		run-demos				\
+		clean-demos
+
+# generic targets for running the tests 
+all: clean-all test-all
+test-all: $(addsuffix .test, $(TESTS))
+clean-all: $(addsuffix .clean, $(TESTS))
+
+# rule for deleting the products of a particular test
+%.clean:
+	rm -f $(REPRO_LOGGING_DIRNAME)/$(REPRO_LOGGING_FILENAME)
+	rm -f $(TEXTFILE)
+
+# the test targets
+
+reset-repro.test:
+	$(NOLOG) $(AUTO) make init-repro > /dev/null
+	$(LOG) $(AUTO) make reset-repro > $(TEXTFILE)
+
+start-repro-auto.test:
+	$(LOG) $(AUTO) make start-repro > $(TEXTFILE)
+
+start-repro-manual.test:
+	$(LOG) $(MANUAL) make start-repro > $(TEXTFILE)
+
+start-services-auto.test:
+	$(LOG) $(AUTO) make start-services > $(TEXTFILE)
+
+start-services-manual.test:
+	$(LOG) $(MANUAL) make start-services > $(TEXTFILE)
+
+run-demos.test:
+	$(LOG) $(AUTO) make run-demos  > $(TEXTFILE)
+
+clean-demos.test:
+	$(LOG) $(AUTO) make clean-demos > $(TEXTFILE)
+
+
