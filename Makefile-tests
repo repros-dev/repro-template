@@ -5,7 +5,7 @@ default_target: all
 # default settings for all tests
 export REPRO_EXIT_AFTER_STARTUP=true
 export REPRO_INTERACTIVE_SESSION=false
-export REPRO_LOGGING_LEVEL=debug
+export REPRO_LOGGING_LEVEL=info
 export REPRO_LOGGING_OPTIONS=NO_TIMESTAMPS NO_LOCATIONS NO_TERMINAL
 
 # macro for automatically naming the log file for a test
