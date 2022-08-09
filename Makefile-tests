@@ -1,4 +1,7 @@
 
+
+MAKE ?= make
+
 # run all tests by default
 default_target: all
 
@@ -50,25 +53,25 @@ clean-all: $(addsuffix .clean, $(TESTS))
 # the test targets
 
 reset-repro.test:
-	$(NOLOG) $(AUTO) make init-repro > /dev/null
-	$(LOG) $(AUTO) make reset-repro > $(TEXTFILE)
+	$(NOLOG) $(AUTO) $(MAKE) init-repro > /dev/null
+	$(LOG) $(AUTO) $(MAKE) reset-repro > $(TEXTFILE)
 
 start-repro-auto.test:
-	$(LOG) $(AUTO) make start-repro > $(TEXTFILE)
+	$(LOG) $(AUTO) $(MAKE) start-repro > $(TEXTFILE)
 
 start-repro-manual.test:
-	$(LOG) $(MANUAL) make start-repro > $(TEXTFILE)
+	$(LOG) $(MANUAL) $(MAKE) start-repro > $(TEXTFILE)
 
 start-services-auto.test:
-	$(LOG) $(AUTO) make start-services > $(TEXTFILE)
+	$(LOG) $(AUTO) $(MAKE) start-services > $(TEXTFILE)
 
 start-services-manual.test:
-	$(LOG) $(MANUAL) make start-services > $(TEXTFILE)
+	$(LOG) $(MANUAL) $(MAKE) start-services > $(TEXTFILE)
 
 run-demos.test:
-	$(LOG) $(AUTO) make run-demos  > $(TEXTFILE)
+	$(LOG) $(AUTO) $(MAKE) run-demos  > $(TEXTFILE)
 
 clean-demos.test:
-	$(LOG) $(AUTO) make clean-demos > $(TEXTFILE)
+	$(LOG) $(AUTO) $(MAKE) clean-demos > $(TEXTFILE)
 
 

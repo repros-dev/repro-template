@@ -6,8 +6,12 @@ ifeq ('$(OS)', 'Windows_NT')
 PWSH=powershell -noprofile -command
 endif
 
+MAKE ?= make
+
 # by default invoke the `list` target run if no argument is provided to make
 default_target: list
+
+TARGET_NOT_SUPPORTED_IN_RUNNING_REPRO = $(error The '$@' target is not supported in a running REPRO)
 
 # Include optional repro-config file to to override default REPRO settings.
 -include repro-config
@@ -123,6 +127,9 @@ upgrade-makefile:  ## Replace local REPRO Makefile with latest version
                    ## of Makefile on repros-dev/repro master branch.
 	curl -L https://raw.githubusercontent.com/repros-dev/repro/master/Makefile -o Makefile
 
+upgrade-makefile-tests:  
+	curl -L https://raw.githubusercontent.com/repros-dev/repro/master/Makefile-tests -o Makefile-tests
+
 
 ifndef IN_RUNNING_REPRO
 
@@ -229,7 +236,7 @@ start-repro: session
 endif
 else
 start-repro:
-	$(warning INFO: The REPRO is already running.)
+	$(TARGET_NOT_SUPPORTED_IN_RUNNING_REPRO)
 endif
 
 ifndef IN_RUNNING_REPRO
@@ -243,19 +250,17 @@ reset-repro: session
 	$(file >> ${ENV_FILE}, REPRO_DEFER_INIT=true)
 	$(RUN_IN_REPRO) repro.reset_repro
 
-TARGET_NOT_SUPPORTED_IN_RUNNING_REPRO = $(error The $@ target is not supported in a running REPRO)
-
 REPRO_TESTS_FILE=repro-tests
 ## test-repro:        Run automated regression tests on this REPRO.
 test-repro: repro-logs 
 ifndef IN_RUNNING_REPRO
-	@make -f Makefile-tests --quiet
+	@$(MAKE) -f Makefile-tests --quiet
 else
 	$(TARGET_NOT_SUPPORTED_IN_RUNNING_REPRO)
 endif
 
 clean-repro:       ## Delete logs in REPRO logs directory.
-	make -f Makefile-tests clean-all
+	$(MAKE) -f Makefile-tests clean-all
 	rm -f $(REPRO_LOGGING_DIRNAME)/*.log
 
 ## 
