@@ -37,8 +37,8 @@ TESTS = reset-repro				\
 		start-repro-manual		\
 		start-services-auto		\
 		start-services-manual 	\
-		run-demos				\
-		clean-demos
+		clean-demos				\
+		run-demos
 
 # generic targets for running the tests 
 all: clean-all test-all
@@ -53,8 +53,8 @@ clean-all: $(addsuffix .clean, $(TESTS))
 # the test targets
 
 reset-repro.test:
-	$(NOLOG) $(AUTO) $(MAKE) init-repro > /dev/null
-	$(LOG) $(AUTO) $(MAKE) reset-repro > $(TEXTFILE)
+	$(NOLOG) $(AUTO) $(MAKE) init-repro  > /dev/null
+	$(LOG)   $(AUTO) $(MAKE) reset-repro > $(TEXTFILE)
 
 start-repro-auto.test:
 	$(LOG) $(AUTO) $(MAKE) start-repro > $(TEXTFILE)
@@ -68,10 +68,10 @@ start-services-auto.test:
 start-services-manual.test:
 	$(LOG) $(MANUAL) $(MAKE) start-services > $(TEXTFILE)
 
-run-demos.test:
-	$(LOG) $(AUTO) $(MAKE) run-demos  > $(TEXTFILE)
-
 clean-demos.test:
-	$(LOG) $(AUTO) $(MAKE) clean-demos > $(TEXTFILE)
+	$(NOLOG) $(AUTO) $(MAKE) run-demos   > /dev/null
+	$(LOG)   $(AUTO) $(MAKE) clean-demos > $(TEXTFILE)
 
-
+run-demos.test:
+	$(NOLOG) $(AUTO) $(MAKE) clean-demos > /dev/null
+	$(LOG)   $(AUTO) $(MAKE) run-demos   > $(TEXTFILE)
