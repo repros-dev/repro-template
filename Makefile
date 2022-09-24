@@ -178,28 +178,33 @@ QUIET=@
 endif
 
 SESSION_DIR=.repro-sessions/active
-ENV_FILE=${SESSION_DIR}/session.env
+SESSION_ENV_FILE=${SESSION_DIR}/session.env
+
+OS_APPEND_ENV=echo >> $(SESSION_ENV_FILE)
+OS_CREATE_DIR=mkdir -p
+OS_TRUNCATE_FILE=echo >
 
 PHONY: session repro-logs
-
 repro-logs:
 ifndef IN_RUNNING_REPRO
-	$(shell mkdir -p ${REPRO_LOGGING_DIRNAME})
+	$(shell $(OS_CREATE_DIR) ${REPRO_LOGGING_DIRNAME})
 endif
 
 session: repro-logs
 ifndef IN_RUNNING_REPRO
-	$(shell mkdir -p ${SESSION_DIR})
-	$(file  > ${ENV_FILE}, REPRO_NAME=$(REPRO_NAME))
-	$(file >> ${ENV_FILE}, REPRO_MNT=$(REPRO_MNT))
-	$(file >> ${ENV_FILE}, REPRO_TAG=$(REPRO_IMAGE))
-	$(file >> ${ENV_FILE}, REPRO_IMAGE_ID=$(REPRO_IMAGE_ID))
-	$(file >> ${ENV_FILE}, REPRO_SERVICES_STARTUP=$(REPRO_SERVICES_STARTUP))
-	$(file >> ${ENV_FILE}, REPRO_LOGS_DIR=$(REPRO_LOGS_DIR))
-	$(file >> ${ENV_FILE}, REPRO_LOGGING_LEVEL=$(REPRO_LOGGING_LEVEL))
-	$(file >> ${ENV_FILE}, REPRO_LOGGING_FILENAME=$(REPRO_LOGGING_FILENAME))
-	$(file >> ${ENV_FILE}, REPRO_LOGGING_OPTIONS=$(REPRO_LOGGING_OPTIONS))
-	$(file >> ${ENV_FILE}, REPRO_INTERACTIVE_SESSION=$(REPRO_INTERACTIVE_SESSION))
+	$(shell $(OS_CREATE_DIR) ${SESSION_DIR})
+	$(shell $(OS_TRUNCATE_FILE) $(SESSION_ENV_FILE))
+	$(shell $(OS_APPEND_ENV) REPRO_NAME=$(REPRO_NAME))
+	$(shell $(OS_APPEND_ENV) REPRO_MNT=$(REPRO_MNT))
+	$(shell $(OS_APPEND_ENV) REPRO_TAG=$(REPRO_IMAGE))
+	$(shell $(OS_APPEND_ENV) REPRO_IMAGE_ID=$(REPRO_IMAGE_ID))
+	$(shell $(OS_APPEND_ENV) REPRO_SERVICES_STARTUP=$(REPRO_SERVICES_STARTUP))
+	$(shell $(OS_APPEND_ENV) REPRO_LOGS_DIR=$(REPRO_LOGS_DIR))
+	$(shell $(OS_APPEND_ENV) REPRO_LOGGING_LEVEL=$(REPRO_LOGGING_LEVEL))
+	$(shell $(OS_APPEND_ENV) REPRO_LOGGING_FILENAME=$(REPRO_LOGGING_FILENAME))
+	$(shell $(OS_APPEND_ENV) REPRO_LOGGING_OPTIONS=$(REPRO_LOGGING_OPTIONS))
+	$(shell $(OS_APPEND_ENV) REPRO_INTERACTIVE_SESSION=$(REPRO_INTERACTIVE_SESSION))
+	$(shell docker version > ${SESSION_DIR}/docker.yaml)
 	$(shell docker inspect ${REPRO_IMAGE_ID} > ${SESSION_DIR}/image.json)
 else
 	@:
@@ -208,7 +213,7 @@ endif
 # define command for running the REPRO Docker image
 REPRO_RUN_COMMAND=$(QUIET)docker run -it --rm $(REPRO_DOCKER_OPTIONS)   \
                              --volume "$(CURDIR)":"$(REPRO_MNT)"       	\
-							 --env-file=${ENV_FILE}						\
+							 --env-file=${SESSION_ENV_FILE}						\
 							 $(REPRO_SETTINGS)							\
                              $(REPRO_MOUNT_OTHER_VOLUMES)               \
                              $(REPRO_IMAGE)
@@ -242,12 +247,12 @@ endif
 ifndef IN_RUNNING_REPRO
 ## init-repro:        Initialize REPRO modules.
 init-repro: session
-	$(file >> ${ENV_FILE}, REPRO_SERVICES_STARTUP=manual)
+	$(shell $(OS_APPEND_ENV) REPRO_SERVICES_STARTUP=manual)
 	$(RUN_IN_REPRO) exit
 endif
 
 reset-repro: session
-	$(file >> ${ENV_FILE}, REPRO_DEFER_INIT=true)
+	$(shell $(OS_APPEND_ENV) REPRO_DEFER_INIT=true)
 	$(RUN_IN_REPRO) repro.reset_repro
 
 REPRO_TESTS_FILE=repro-tests
@@ -276,13 +281,13 @@ endif
 ## 
 ## ---------- Targets for running the examples in this REPRO --------------------
 ## 
-## run-demos:         Run this REPRO's demonsrations.
-run-demos: session
-	$(RUN_IN_REPRO) 'repro.run_target run-demos'
+## run-demo:         Run this REPRO's demonsration.
+run-demo: session
+	$(RUN_IN_REPRO) 'repro.run_target run-demo'
 
-## clean-demos:       Delete artifacts created by demonstrations.
-clean-demos: session
-	$(RUN_IN_REPRO) 'repro.run_target clean-demos'
+## clean-demo:       Delete artifacts created by the demonstration.
+clean-demo: session
+	$(RUN_IN_REPRO) 'repro.run_target clean-demo'
 
 ## 
 ## ---------- Targets for performing the analyses in this REPRO -----------------

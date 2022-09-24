@@ -1,4 +1,6 @@
-I MESG Initialized REPRO logging system and macros
+I MESG Loaded repro logging functions
+I MESG Initialized repro logging system
+I MESG Loaded repro base functions
 I MESG Initializing REPRO session
 I MESG Building PATH variable
 I MESG Initializing modules
@@ -9,5 +11,5 @@ I MESG Starting services during session initialization because REPRO_SERVICES_ST
 I MESG Invoking implementations of REPRO target 'start-services'
 I MESG No implementations of the 'start-services' REPRO target were found
 I MESG Done initializing REPRO session
-I MESG Invoking implementations of REPRO target 'run-demos'
-I MESG No implementations of the 'run-demos' REPRO target were found
+I MESG Invoking implementations of REPRO target 'run-demo'
+I MESG No implementations of the 'run-demo' REPRO target were found
