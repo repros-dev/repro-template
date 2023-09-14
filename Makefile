@@ -68,6 +68,15 @@ REPRO_INTERACTIVE_SESSION ?= true
 
 REPRO_LOGGING_DIRNAME ?= .repro-logs
 
+
+#- 
+#- --- DOCKER_BUILD_PROGRESS ---------------------------------------------------
+#- 
+#-    tty : Hide output of cached docker build steps (DEFAULT).
+#-  plain : Show all docker build output.
+#
+DOCKER_BUILD_PROGRESS ?= tty
+
 # Use working directory as name of REPRO if REPRO_NAME undefined.
 ifndef REPRO_NAME
 REPRO_NAME=$(shell basename $$(pwd))
@@ -137,10 +146,10 @@ ifndef IN_RUNNING_REPRO
 ## ---------- Targets for managing the Docker image for this REPRO -------------
 ## 
 build-image:       ## Build this REPRO's Docker image.
-	docker build -t ${REPRO_IMAGE} .
+	docker build --build-arg PARENT_IMAGE=${PARENT_IMAGE} --progress=${DOCKER_BUILD_PROGRESS} -t ${REPRO_IMAGE} .
 
 rebuild-image:     ## Force rebuild of this REPRO's Docker image.
-	docker build --no-cache -t ${REPRO_IMAGE} .
+	docker build --build-arg PARENT_IMAGE=${PARENT_IMAGE} --progress=${DOCKER_BUILD_PROGRESS} --no-cache -t ${REPRO_IMAGE} .
 
 pull-image:        ## Pull this REPRO's Docker image from Docker Hub.
 	docker pull ${REPRO_IMAGE}
@@ -154,10 +163,10 @@ push-image:        ## Push this REPRO's Docker image to Docker Hub.
 ifdef PARENT_IMAGE
 
 build-parent:      ## Build the custom parent Docker image.
-	docker build -f Dockerfile-parent -t ${PARENT_IMAGE} .
+	docker build --build-arg PARENT_BUILD_ARG_1=${PARENT_BUILD_ARG_1} --progress=${DOCKER_BUILD_PROGRESS} -f Dockerfile-parent -t ${PARENT_IMAGE} .
 
 rebuild-parent:    ## Force rebuild of the custom Docker image.
-	docker build --no-cache -f Dockerfile-parent -t ${PARENT_IMAGE} .
+	docker build --build-arg PARENT_BUILD_ARG_1=${PARENT_BUILD_ARG_1} --progress=${DOCKER_BUILD_PROGRESS} --no-cache -f Dockerfile-parent -t ${PARENT_IMAGE} .
 
 pull-parent:       ## Pull the custom parent image from Docker Hub.
 	docker pull ${PARENT_IMAGE}

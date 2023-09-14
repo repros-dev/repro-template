@@ -2,7 +2,8 @@ REPRO_NAME=repro-template
 REPRO_DOCKER_ORG=cirss
 REPRO_IMAGE_TAG=latest
 
-image:                  build-image   ## 
-start:                  start-repro   ## 
+REPRO_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}:${REPRO_IMAGE_TAG}
+PARENT_IMAGE=${REPRO_DOCKER_ORG}/${REPRO_NAME}-parent:${REPRO_IMAGE_TAG}
 
-## 
+image:             build-image   ## 
+start:             start-repro   ## 
